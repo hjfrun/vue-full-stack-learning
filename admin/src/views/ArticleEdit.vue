@@ -63,21 +63,17 @@ export default {
     async fetch() {
       const { data } = await this.$http.get(`/rest/articles/${this.id}`)
       this.model = data
-      console.log('data', data)
     },
     async fetchCategories() {
       const res = await this.$http.get('/rest/categories')
-      console.log('res ata', res)
       this.categories = res.data
     },
     async save() {
-      let res
       if (this.id) {
-        res = await this.$http.put(`/rest/articles/${this.id}`, this.model)
+        await this.$http.put(`/rest/articles/${this.id}`, this.model)
       } else {
-        res = await this.$http.post('/rest/articles', this.model)
+        await this.$http.post('/rest/articles', this.model)
       }
-      console.log('res', res)
       this.$router.push('/articles/list')
       this.$message({
         type: 'success',

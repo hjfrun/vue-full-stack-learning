@@ -153,7 +153,6 @@ export default {
     },
     async fetch() {
       const { data } = await this.$http.get(`/rest/heroes/${this.id}`)
-      // this.model = data
       this.model = Object.assign({}, this.model, data)
     },
     async fetchCategories() {
@@ -165,13 +164,11 @@ export default {
       this.items = data
     },
     async save() {
-      let res
       if (this.id) {
-        res = await this.$http.put(`/rest/heroes/${this.id}`, this.model)
+        await this.$http.put(`/rest/heroes/${this.id}`, this.model)
       } else {
-        res = await this.$http.post('/rest/heroes', this.model)
+        await this.$http.post('/rest/heroes', this.model)
       }
-      console.log('res', res)
       this.$router.push('/heroes/list')
       this.$message({
         type: 'success',

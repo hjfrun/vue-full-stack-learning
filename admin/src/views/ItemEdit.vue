@@ -46,7 +46,6 @@ export default {
   },
   methods: {
     afterUpload(res) {
-      console.log('res: ', res)
       this.model.icon = res.url
       // model一开始没有预设属性字段的情况
       // this.$set(this.model, 'icon', res.url)
@@ -54,16 +53,13 @@ export default {
     async fetch() {
       const { data } = await this.$http.get(`/rest/items/${this.id}`)
       this.model = data
-      console.log('data', data)
     },
     async save() {
-      let res
       if (this.id) {
-        res = await this.$http.put(`/rest/items/${this.id}`, this.model)
+        await this.$http.put(`/rest/items/${this.id}`, this.model)
       } else {
-        res = await this.$http.post('/rest/items', this.model)
+        await this.$http.post('/rest/items', this.model)
       }
-      console.log('res', res)
       this.$router.push('/items/list')
       this.$message({
         type: 'success',
