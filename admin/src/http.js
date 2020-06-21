@@ -19,4 +19,9 @@ http.interceptors.response.use(res => {
   return Promise.reject(err)
 })
 
+http.interceptors.request.use(config => {
+  config.headers.Authorization = 'Bearer ' + localStorage.token
+  return config
+})
+
 export default http
