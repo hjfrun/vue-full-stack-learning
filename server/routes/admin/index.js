@@ -4,6 +4,11 @@ module.exports = app => {
   const jwt = require('jsonwebtoken')
   const assert = require('http-assert')
 
+  // 登录校验中间件
+  const authMiddleWare = require('../../middleware/auth')
+
+  const resourceMiddleWare = require('../../middleware/resources')
+
   const router = express.Router({
     mergeParams: true
   })
@@ -13,16 +18,8 @@ module.exports = app => {
     res.send(model)
   })
 
-  router.get('/', async (req, res, next) => {
-    // 校验用户是否登录
-    const token = String(req.headers.authorization || '').split(' ').pop()
-    console.log('token', token)
-    // 提取token数据
-    const { id } = jwt.verify(token, app.get('secret'))
-    req.user = await AdminUser.findById(id)
-    console.log(req.user)
-    await next()
-  }, async (req, res) => {
+  // 资源列表
+  router.get('/', async (req, res) => {
     const queryOptions = {}
     if (req.Model.modelName === 'Category') {
       queryOptions.populate = 'parent'
@@ -47,21 +44,18 @@ module.exports = app => {
     })
   })
 
-  app.use('/admin/api/rest/:resource', async (req, res, next) => {
-    const modelName = require('inflection').classify(req.params.resource)
-    req.Model = require(`../../models/${modelName}`)
-    next()
-  }, router)
+
+  app.use('/admin/api/rest/:resource', authMiddleWare(), resourceMiddleWare(), router)
 
   const multer = require('multer')
   const upload = multer({ dest: __dirname + '/../../uploads' })
-  app.post('/admin/api/upload', upload.single('file'), async (req, res) => {
+  app.post('/admin/api/upload', authMiddleWare(), upload.single('file'), async (req, res) => {
     const file = req.file
     file.url = `http://localhost:3001/uploads/${file.filename}`
     res.send(file)
   })
 
-  app.post('/admin/api/login', async (req, res, next) => {
+  app.post('/admin/api/login', async (req, res) => {
     const { username, password } = req.body
 
     // 根据用户名找用户
@@ -79,7 +73,7 @@ module.exports = app => {
 
   // 错误处理函数
   app.use(async (err, req, res, next) => {
-    res.status(err.statusCode).send({ message: err.message })
+    res.status(err.statusCode || 500).send({ message: err.message })
   })
 
 }
