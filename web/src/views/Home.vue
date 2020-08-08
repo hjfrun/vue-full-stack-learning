@@ -36,37 +36,6 @@
         </div>
       </template>
     </m-list-card>
-    <!-- <m-card icon="cc-menu-circle" title="新闻资讯">
-      <div class="nav jc-between">
-        <div class="nav-item active">
-          <div class="nav-link">热门</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-link">新闻</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-link">公告</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-link">活动</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-link">赛事</div>
-        </div>
-      </div>
-      <div class="pt-3">
-        <swiper>
-          <swiper-slide v-for="m in 5" :key="m">
-            <div class="py-2" v-for="n in 6" :key="n">
-              <span>[新闻]</span>
-              <span>|</span>
-              <span>停机更新通告</span>
-              <span>08/06</span>
-            </div>
-          </swiper-slide>
-        </swiper>
-      </div>
-    </m-card>-->
     <m-card icon="cc-menu-circle" title="英雄列表"></m-card>
     <m-card icon="cc-menu-circle" title="精彩视频"></m-card>
   </div>
@@ -81,49 +50,17 @@ export default {
           el: '.pagination-home',
         },
       },
-      newsCats: [
-        {
-          name: '热门',
-          newsList: new Array(5).fill({}).map(() => ({
-            categoryName: '公告',
-            title: '8月6日体验服停机更新公告',
-            date: '08/06',
-          })),
-        },
-        {
-          name: '新闻',
-          newsList: new Array(5).fill({}).map(() => ({
-            categoryName: '公告',
-            title: '8月6日体验服停机更新公告',
-            date: '08/06',
-          })),
-        },
-        {
-          name: '公告',
-          newsList: new Array(5).fill({}).map(() => ({
-            categoryName: '公告',
-            title: '8月6日体验服停机更新公告',
-            date: '08/06',
-          })),
-        },
-        {
-          name: '活动',
-          newsList: new Array(5).fill({}).map(() => ({
-            categoryName: '公告',
-            title: '8月6日体验服停机更新公告',
-            date: '08/06',
-          })),
-        },
-        {
-          name: '赛事',
-          newsList: new Array(5).fill({}).map(() => ({
-            categoryName: '公告',
-            title: '8月6日体验服停机更新公告',
-            date: '08/06',
-          })),
-        },
-      ],
+      newsCats: [],
     }
+  },
+  methods: {
+    async fetchNewsCats() {
+      const res = await this.$http.get('news/list')
+      this.newsCats = res.data
+    },
+  },
+  created() {
+    this.fetchNewsCats()
   },
 }
 </script>

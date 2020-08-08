@@ -10,6 +10,7 @@ app.use(require('cors')())
 app.use(express.json())
 
 require('./routes/admin')(app)
+require('./routes/web')(app)
 require('./plugins/db')(app)
 
 app.listen(3001, () => {
