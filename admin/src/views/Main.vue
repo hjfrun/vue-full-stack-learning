@@ -59,7 +59,7 @@
       </el-header>
 
       <el-main>
-        <router-view></router-view>
+        <router-view :key="$route.path"></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -81,6 +81,6 @@
 export default {
   data() {
     return {}
-  }
+  },
 }
 </script>
