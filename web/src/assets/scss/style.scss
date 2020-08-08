@@ -53,6 +53,13 @@ a {
   height: 100%;
 }
 
+.text-ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 // flex
 
 .d-flex {
