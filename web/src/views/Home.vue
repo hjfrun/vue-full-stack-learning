@@ -32,7 +32,7 @@
           <span class="text-info">[{{news.categoryName}}]</span>
           <span class="px-2">|</span>
           <span class="flex-1 text-dark">{{news.title}}</span>
-          <span>{{news.createdAt}}</span>
+          <span>{{news.createdAt | date}}</span>
         </div>
       </template>
     </m-list-card>
@@ -42,7 +42,13 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 export default {
+  filters: {
+    date(val) {
+      return dayjs(val).format('MM/DD')
+    },
+  },
   data() {
     return {
       swiperOption: {
