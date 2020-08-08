@@ -28,11 +28,11 @@
     <!-- end of nav icons  -->
     <m-list-card icon="cc-menu-circle" title="新闻资讯" :categories="newsCats">
       <template #items="{category}">
-        <div class="py-2" v-for="(news, i) in category.newsList" :key="i">
-          <span>[{{news.categoryName}}]</span>
-          <span>|</span>
-          <span>{{news.title}}</span>
-          <span>{{news.date}}</span>
+        <div class="py-2 fs-lg d-flex" v-for="(news, i) in category.newsList" :key="i">
+          <span class="text-info">[{{news.categoryName}}]</span>
+          <span class="px-2">|</span>
+          <span class="flex-1 text-dark">{{news.title}}</span>
+          <span>{{news.createdAt}}</span>
         </div>
       </template>
     </m-list-card>
