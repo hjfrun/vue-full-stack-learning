@@ -54,14 +54,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .page-article {
   .icon-icon-test1 {
     font-size: 1.5385rem;
   }
   .body {
     img {
-      width: 100%;
+      max-width: 100%;
       height: auto;
     }
     iframe {
