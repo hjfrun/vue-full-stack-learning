@@ -6,7 +6,8 @@ import router from './router'
 
 
 const http = axios.create({
-  baseURL: 'http://localhost:3001/admin/api'
+  // baseURL: 'http://localhost:3001/admin/api'
+  baseURL: 'http://192.168.3.3:3001/admin/api'
 })
 
 http.interceptors.response.use(res => {
