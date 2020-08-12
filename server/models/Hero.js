@@ -7,6 +7,9 @@ const schema = new mongoose.Schema({
   avatar: {
     type: String
   },
+  banner: {
+    type: String
+  },
   title: {
     type: String
   },
@@ -32,6 +35,12 @@ const schema = new mongoose.Schema({
       type: String
     },
     name: {
+      type: String
+    },
+    delay: {
+      type: String
+    },
+    cost: {
       type: String
     },
     description: {

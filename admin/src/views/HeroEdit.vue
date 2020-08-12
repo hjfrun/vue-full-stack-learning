@@ -2,7 +2,7 @@
   <div>
     <h1>{{id ? '编辑':'新建'}}英雄</h1>
     <el-form label-width="120px" @submit.native.prevent="save">
-      <el-tabs type="border-card" value="skills">
+      <el-tabs type="border-card" value="basic">
         <el-tab-pane label="基础信息" name="basic">
           <el-form-item label="名称">
             <el-input v-model="model.name"></el-input>
@@ -16,12 +16,26 @@
               :action="uploadUrl"
               :show-file-list="false"
               :headers="getAuthHeaders()"
-              :on-success="afterUpload"
+              :on-success="res => $set(model, 'avatar', res.url)"
             >
               <img v-if="model.avatar" :src="model.avatar" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
+
+          <el-form-item label="Banner">
+            <el-upload
+              class="avatar-uploader"
+              :action="uploadUrl"
+              :show-file-list="false"
+              :headers="getAuthHeaders()"
+              :on-success="res => $set(model, 'banner', res.url)"
+            >
+              <img v-if="model.banner" :src="model.banner" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+
           <el-form-item label="类型">
             <el-select v-model="model.categories" multiple>
               <el-option
@@ -84,14 +98,23 @@
               <el-form-item label="图标">
                 <el-upload
                   class="avatar-uploader"
-                  :action="$http.defaults.baseURL + '/upload'"
+                  :action="uploadUrl"
                   :show-file-list="false"
+                  :headers="getAuthHeaders()"
                   :on-success="res=>$set(item, 'icon', res.url)"
                 >
                   <img v-if="item.icon" :src="item.icon" class="avatar" />
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
+
+              <el-form-item label="冷却值">
+                <el-input v-model="item.delay"></el-input>
+              </el-form-item>
+              <el-form-item label="消耗">
+                <el-input v-model="item.cost"></el-input>
+              </el-form-item>
+
               <el-form-item label="描述">
                 <el-input v-model="item.description" type="typearea"></el-input>
               </el-form-item>
@@ -100,6 +123,33 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="danger" size="small" @click="model.skills.splice(i, 1)">删除</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+
+        <el-tab-pane label="最佳搭档" name="partners">
+          <el-button @click="model.partners.push({})">
+            <i class="el-icon-plus"></i>添加英雄
+          </el-button>
+          <el-row type="flex" style="flex-wrap: wrap;">
+            <el-col :md="12" v-for="(item, i) in model.partners" :key="i">
+              <el-form-item label="英雄">
+                <el-select filterable clearable v-model="item.hero">
+                  <el-option
+                    v-for="hero in heroes"
+                    :key="hero._id"
+                    :value="hero._id"
+                    :label="hero.name"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="描述">
+                <el-input v-model="item.description" type="typearea"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="danger" size="small" @click="model.partners.splice(i, 1)">删除</el-button>
               </el-form-item>
             </el-col>
           </el-row>
@@ -117,8 +167,8 @@
 export default {
   props: {
     id: {
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {
@@ -131,27 +181,31 @@ export default {
           difficult: 0,
           skill: 0,
           attack: 0,
-          survive: 0
+          survive: 0,
         },
         usageTips: '',
         battleTips: '',
         teamTips: '',
-        skills: []
+        skills: [],
+        partners: [],
       },
       categories: [],
-      items: []
+      items: [],
+      heroes: [],
     }
   },
   created() {
     this.fetchCategories()
     this.fetchItems()
+    this.fetchHeroes()
     this.id && this.fetch()
   },
   methods: {
-    afterUpload(res) {
-      this.model.avatar = res.url
-    },
     async fetch() {
+      const { data } = await this.$http.get('/rest/heroes')
+      this.heroes = data
+    },
+    async fetchHeroes() {
       const { data } = await this.$http.get(`/rest/heroes/${this.id}`)
       this.model = Object.assign({}, this.model, data)
     },
@@ -169,12 +223,12 @@ export default {
       } else {
         await this.$http.post('/rest/heroes', this.model)
       }
-      this.$router.push('/heroes/list')
+      // this.$router.push('/heroes/list')
       this.$message({
         type: 'success',
-        message: '保存成功'
+        message: '保存成功',
       })
-    }
-  }
+    },
+  },
 }
 </script>
