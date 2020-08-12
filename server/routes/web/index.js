@@ -133,6 +133,7 @@ module.exports = app => {
     data.related = await Article.find().where({
       categories: { $in: data.categories }
     }).limit(2)
+    res.send(data)
   })
 
   // 英雄详情

@@ -5,6 +5,8 @@ const app = express()
 app.set('secret', 'HJF_MOBA_DEMO')
 
 app.use('/uploads', express.static(__dirname + '/uploads'))
+app.use('/admin', express.static(__dirname + '/admin'))
+app.use('/', express.static(__dirname + '/web'))
 
 app.use(require('cors')())
 app.use(express.json())
